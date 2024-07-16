@@ -1,0 +1,31 @@
+{
+    "name": "autojs-common-business",
+    "version": "1.0.0",
+    "description": "专为 Auto.js 设计的业务逻辑工具库，旨在简化日常自动化任务中的常见业务流程处理。",
+    "main": "./src/index.js",
+    "scripts": {
+        "test": "jest tests/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/314432150/autojs-common-business.git"
+    },
+    "keywords": [
+        "autojs",
+        "automation",
+        "business-logic",
+        "tools",
+        "common",
+        "javascript",
+        "mobile-automation",
+        "scripting",
+        "ui-automation",
+        "app-automation"
+    ],
+    "author": "fishme",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/314432150/autojs-common-business/issues"
+    },
+    "homepage": "https://github.com/314432150/autojs-common-business#readme"
+}
