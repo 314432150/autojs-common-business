@@ -2,8 +2,6 @@
  * 基础UI模块提供与用户界面交互相关的功能
  */
 
-const acbUi = {};
-
 /**
  * 生成控件边界内的随机坐标
  * 此函数根据传入的控件边界生成一个随机坐标点，
@@ -12,7 +10,7 @@ const acbUi = {};
  * @param {Object} bounds - 控件的边界属性，应包含 left, top, width, height 属性
  * @returns {Object} 包含 x 和 y 坐标的对象，表示控件边界内的一个随机点
  */
-function getRandomPointInBounds(bounds) {
+const getRandomPointInBounds = (bounds) => {
     const width = bounds.width();
     const height = bounds.height();
     const left = bounds.left;
@@ -23,14 +21,14 @@ function getRandomPointInBounds(bounds) {
         x: Math.floor(left + Math.random() * width),
         y: Math.floor(top + Math.random() * height),
     };
-}
+};
 
 /**
  * 定义一个通用的点击函数，加入随机偏移以避免检测
  * @param {UiObject} widget - 要点击的控件对象
  * @returns {boolean} - 表示点击是否成功
  */
-acbUi.humanizeClick = function (widget) {
+const humanizeClick = (widget) => {
     // 尝试直接调用 click 方法
     if (widget.click()) {
         return true;
@@ -55,7 +53,7 @@ acbUi.humanizeClick = function (widget) {
  * @param {number} endY - 滑动的结束Y坐标
  * @param {number} duration - 滑动的持续时间（毫秒）
  */
-acbUi.humanizeSwipe = function (startX, startY, endX, endY, duration) {
+const humanizeSwipe = (startX, startY, endX, endY, duration) => {
     // 创建贝塞尔曲线控制点
     const controlX1 = startX + (endX - startX) / 3;
     const controlY1 = startY + (endY - startY) / 3;
@@ -88,4 +86,36 @@ acbUi.humanizeSwipe = function (startX, startY, endX, endY, duration) {
     gesture.apply(null, [duration].concat(points));
 };
 
-module.exports = acbUi;
+/**
+ * 异步查找指定元素并返回Promise，支持超时控制
+ * @param {Function} queryFunc - 要查找的元素函数
+ * @param {number} [delay=50] - 查找元素之间的延迟时间（毫秒）
+ * @param {number} [timeout=-1] - 超时时间（毫秒），-1表示无超时限制
+ * @returns {Promise<UiObject|null>} - 查找到的元素对象，或在超时时返回null
+ */
+const queryElement = (queryFunc, delay = 50, timeout = -1) => {
+    return new Promise((resolve, reject) => {
+        let startTime = Date.now(); // 记录开始时间
+        let timer;
+
+        const checkElement = function () {
+            const element = queryFunc.findOnce();
+            if (element !== null) {
+                resolve(element);
+            } else if (timeout !== -1 && Date.now() - startTime > timeout) {
+                clearTimeout(timer);
+                reject(new Error("查找超时"));
+            } else {
+                timer = setTimeout(checkElement, delay);
+            }
+        };
+
+        checkElement();
+    });
+};
+
+export default {
+    humanizeClick,
+    humanizeSwipe,
+    queryElement,
+};
